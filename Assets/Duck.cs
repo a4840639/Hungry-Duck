@@ -25,4 +25,12 @@ public class Duck : MonoBehaviour {
 			transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (moveDirection), Time.deltaTime * rotationSpeed * moveMagnitude);
 		}
 	}
+
+	void OnTriggerEnter(Collider other) 
+	{
+		if (other.gameObject.CompareTag ("Food"))
+		{
+			other.gameObject.SetActive (false);
+		}
+	}
 }
