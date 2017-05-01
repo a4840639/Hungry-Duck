@@ -16,6 +16,7 @@ public class Duck : MonoBehaviour {
     public AudioClip swimsound;
     public AudioClip boostsound;
     public AudioClip bouncesound;
+    public AudioClip jumpsound;
     private AudioSource source;
     private float vollowrange = .3f;
     private float volhighrange = .6f;
@@ -50,7 +51,8 @@ public class Duck : MonoBehaviour {
 		if (jump > 0 && !onair) {
 			velocity.y = 9.8f;
 			onair = true;
-			print ("Jump");
+            source.PlayOneShot(jumpsound, 1F);
+            print ("Jump");
 		}
 
 		if (dashtime > 0) {
