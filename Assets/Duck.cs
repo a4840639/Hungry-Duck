@@ -20,12 +20,14 @@ public class Duck : MonoBehaviour {
     private AudioSource source;
     private float vollowrange = .3f;
     private float volhighrange = .6f;
+	float timethen;
 
 	bool onair = false;
 	shallow_wave wave_script;
 
 	// Use this for initialization
 	void Start () {
+		timethen = Time.time;
 		controller = GetComponent<CharacterController>();
         source = GetComponent<AudioSource>(); 
 		wave_script = GameObject.Find ("Water").GetComponent<shallow_wave>();
@@ -73,11 +75,12 @@ public class Duck : MonoBehaviour {
 
 		controller.Move (velocity * Time.deltaTime);
 		if (moveDirection.sqrMagnitude > 0) {
-            if ((moveDirection.normalized - direciton).magnitude > 0.3f)
-                    {
-                        float vol = Random.Range(vollowrange, volhighrange);
-                        source.PlayOneShot(swimsound, vol);
-                    }
+			if (!onair && (moveDirection.normalized - direciton).magnitude > 0.3f && Time.time - timethen > 0.5f)
+            {
+                float vol = Random.Range(vollowrange, volhighrange);
+                source.PlayOneShot(swimsound, vol);
+				timethen = Time.time;
+            }
 			direciton = moveDirection.normalized;
 			transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (moveDirection), Time.deltaTime * rotationSpeed * moveMagnitude);
 		}
@@ -107,7 +110,7 @@ public class Duck : MonoBehaviour {
 			onair = false;
 			wave_script.land = true;
 			wave_script.duck = transform.position;
-			source.PlayOneShot(swimsound, 1f);
+			source.PlayOneShot(swimsound, volhighrange);
 		}
 	}
 }
