@@ -6,6 +6,8 @@ public class shallow_wave : MonoBehaviour {
 	float[,] old_h;
 	float[,] h;
 	float[,] new_h;
+	public bool land = false;
+	public Vector3 duck;
 
 
 	// Use this for initialization
@@ -101,11 +103,28 @@ public class shallow_wave : MonoBehaviour {
 		}
 
 		//Step 2: User interaction
-		if (Input.GetKeyDown ("r")) {
+		if (land) {
 			float m = 0.05f + Random.value * 0.05f;
-			int i = Random.Range (0, size - 1);
-			int j = Random.Range (0, size - 1);
+			int i = 0;
+			int j = 0;
+			float distance = float.MaxValue;
+			for (int x = 0; x < size; x++) {
+				for (int y = 0; y < size; y++) {
+					float newDis = Vector3.Distance (duck, vertices [x * size + y]);
+					if (newDis < distance) {
+						distance = newDis;
+						i = x;
+						j = y;
+					}
+				}
+			}
+			
 			h [i, j] -= m;
+			h [(i + 1) % size, (j + 1) % size] += m / 4;
+			h [(i - 1) % size, (j - 1) % size] += m / 4;
+			h [(i + 1) % size, (j - 1) % size] += m / 4;
+			h [(i - 1) % size, (j + 1) % size] += m / 4;
+			land = false;
 		}
 	
 		//Step 3: Run Shallow Wav
