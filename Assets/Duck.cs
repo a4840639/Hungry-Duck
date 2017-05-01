@@ -12,10 +12,12 @@ public class Duck : MonoBehaviour {
 	CharacterController controller;
 	Vector3 lastPos;
 	bool onair = false;
+	shallow_wave wave_script;
 
 	// Use this for initialization
 	void Start () {
 		controller = GetComponent<CharacterController>();
+		wave_script = GameObject.Find ("Water").GetComponent<shallow_wave>();
 	}
 
 	// Update is called once per frame
@@ -82,8 +84,10 @@ public class Duck : MonoBehaviour {
 			velocity = -0.6f * velocity;
 			controller.Move (velocity * Time.deltaTime);
 			accel = velocity;
-		} else if (other.gameObject.CompareTag ("Plane")) {
+		} else if (other.gameObject.CompareTag ("Plane") && onair) {
 			onair = false;
+			wave_script.land = true;
+			wave_script.duck = transform.position;
 		}
 	}
 }
