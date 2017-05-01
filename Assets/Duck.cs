@@ -52,7 +52,6 @@ public class Duck : MonoBehaviour {
 			velocity.y = 9.8f;
 			onair = true;
             source.PlayOneShot(jumpsound, 1F);
-            print ("Jump");
 		}
 
 		if (dashtime > 0) {
@@ -71,7 +70,7 @@ public class Duck : MonoBehaviour {
 			dashtime = 0.4f;
             source.PlayOneShot(boostsound, 1f);
         }
-        int counter = 0;
+
 		controller.Move (velocity * Time.deltaTime);
 		if (moveDirection.sqrMagnitude > 0) {
             if ((moveDirection.normalized - direciton).magnitude > 0.3f)
@@ -108,6 +107,7 @@ public class Duck : MonoBehaviour {
 			onair = false;
 			wave_script.land = true;
 			wave_script.duck = transform.position;
+			source.PlayOneShot(swimsound, 1f);
 		}
 	}
 }

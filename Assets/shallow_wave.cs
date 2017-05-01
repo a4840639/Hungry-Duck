@@ -110,7 +110,10 @@ public class shallow_wave : MonoBehaviour {
 			float distance = float.MaxValue;
 			for (int x = 0; x < size; x++) {
 				for (int y = 0; y < size; y++) {
-					float newDis = Vector3.Distance (duck, vertices [x * size + y]);
+					float newDis = new Vector2 (
+						duck.x - vertices [x * size + y].x,
+						duck.z - vertices [x * size + y].z
+					).sqrMagnitude;
 					if (newDis < distance) {
 						distance = newDis;
 						i = x;
