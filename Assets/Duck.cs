@@ -95,9 +95,10 @@ public class Duck : MonoBehaviour {
 
 	void OnControllerColliderHit(ControllerColliderHit other)
 	{
-		if (other.gameObject.CompareTag ("Wall") && dashtime > 0 && controller.velocity.magnitude > 0) {
+		if (other.gameObject.CompareTag ("Wall") && dashtime > 0) {
 			dashtime = 0.4f;
-			velocity = -0.6f * velocity;
+			velocity.x = -0.6f * controller.velocity.x;
+			velocity.z = -0.6f * controller.velocity.z;
 			controller.Move (velocity * Time.deltaTime);
 			accel = velocity;
             source.PlayOneShot(bouncesound, 1f);
