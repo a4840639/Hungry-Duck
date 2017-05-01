@@ -11,6 +11,7 @@ public class Duck : MonoBehaviour {
 	Vector3 direciton = Vector3.forward;
 	CharacterController controller;
 	Vector3 lastPos;
+	bool onair = false;
 
 	// Use this for initialization
 	void Start () {
@@ -26,22 +27,36 @@ public class Duck : MonoBehaviour {
 			moveMagnitude = 1f;
 		}
 		float dash = Input.GetAxisRaw ("Fire1");
+		float jump = Input.GetAxisRaw ("Fire2");
+
+
+		if (onair) {
+			velocity.y -= Time.deltaTime * 9.8f *speed;
+		}
+
+		if (jump > 0 && !onair) {
+			velocity.y = 9.8f;
+			onair = true;
+			print ("Jump");
+		}
 
 		if (dashtime > 0) {
 			if (dashtime > 0.1f) {
-				velocity = Vector3.SmoothDamp (velocity, velocity * 0.2f, ref accel, 0.3f);
+				velocity.x = Mathf.SmoothDamp (velocity.x, velocity.x * 0.2f, ref accel.x, 0.3f);
+				velocity.z = Mathf.SmoothDamp (velocity.z, velocity.z * 0.2f, ref accel.z, 0.3f);
 			}
 			dashtime -= Time.deltaTime;
 		} else if (dash == 0) {
-			velocity = moveDirection * Time.deltaTime * speed;
-		}
-		else {
-			velocity = direciton * Time.deltaTime * speed * 3f;
-			accel = velocity * 0.9f - velocity;
+			velocity.x = moveDirection.x * speed;
+			velocity.z = moveDirection.z * speed;
+		} else if (!onair) {
+			velocity.x = direciton.x * speed * 3f;
+			velocity.z = direciton.z * speed * 3f;
+			accel = velocity;
 			dashtime = 0.4f;
 		}
 
-		controller.Move (velocity);
+		controller.Move (velocity * Time.deltaTime);
 		if (moveDirection.sqrMagnitude > 0) {
 			direciton = moveDirection.normalized;
 			transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (moveDirection), Time.deltaTime * rotationSpeed * moveMagnitude);
@@ -55,16 +70,20 @@ public class Duck : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Food"))
 		{
 			other.gameObject.SetActive (false);
-		}
+		} 
+
+
 	}
 
-	void OnControllerColliderHit()
+	void OnControllerColliderHit(ControllerColliderHit other)
 	{
-		if (dashtime > 0 && controller.velocity.magnitude > 0) {
+		if (other.gameObject.CompareTag ("Wall") && dashtime > 0 && controller.velocity.magnitude > 0) {
 			dashtime = 0.4f;
 			velocity = -0.6f * velocity;
-			controller.Move (velocity);
-			accel = velocity * 0.9f - velocity;
+			controller.Move (velocity * Time.deltaTime);
+			accel = velocity;
+		} else if (other.gameObject.CompareTag ("Plane")) {
+			onair = false;
 		}
 	}
 }
