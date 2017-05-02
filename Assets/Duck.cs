@@ -11,6 +11,7 @@ public class Duck : MonoBehaviour {
 	Vector3 direciton = Vector3.forward;
 	CharacterController controller;
 	Vector3 lastPos;
+	Vector3 moveDirection;
 
     public AudioClip eatsound;
     public AudioClip swimsound;
@@ -35,7 +36,7 @@ public class Duck : MonoBehaviour {
      
 	// Update is called once per frame
 	void Update () {
-		Vector3  moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+		moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
 		float moveMagnitude = moveDirection.magnitude;
 		if (moveMagnitude > 1) {
@@ -99,14 +100,30 @@ public class Duck : MonoBehaviour {
 
 	void OnControllerColliderHit(ControllerColliderHit other)
 	{
-		if (other.gameObject.CompareTag ("Wall") && dashtime > 0) {
-			dashtime = 0.4f;
-			velocity.x = -0.6f * controller.velocity.x;
-			velocity.z = -0.6f * controller.velocity.z;
-			controller.Move (velocity * Time.deltaTime);
-			accel = velocity;
-            source.PlayOneShot(bouncesound, 1f);
+		if (other.gameObject.CompareTag ("Wall")) {
+			if (dashtime > 0) {
+				dashtime = 0.4f;
+				velocity.x = -0.6f * controller.velocity.x;
+				velocity.z = -0.6f * controller.velocity.z;
+				controller.Move (velocity * Time.deltaTime);
+				accel = velocity;
+				source.PlayOneShot (bouncesound, 1f);
+			} else if (onair) {
+//				if (Mathf.Abs(velocity.x) + Mathf.Abs(velocity.y) > 0.3f) {
+//					velocity.x = direciton.x * 0.5f * speed;
+//					velocity.z = direciton.z * 0.5f * speed;
+//				} else if (moveDirection.sqrMagnitude < 0.1f*0.1f) {
+//					velocity.x = 0.3f * velocity.x;
+//					velocity.z = 0.3f * velocity.z;
+//				}
+//				float y = velocity.y;
+//				velocity.y = 0;
+//				controller.Move (velocity * Time.deltaTime);
+//				velocity.y = y;
+			}
+
         } else if (other.gameObject.CompareTag ("Plane") && onair) {
+			velocity.y = 0;
 			onair = false;
 			wave_script.land = true;
 			wave_script.duck = transform.position;
