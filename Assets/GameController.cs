@@ -38,11 +38,10 @@ public class GameController : MonoBehaviour {
 	}
 
 	void Reset () {
-		time = Time.time;
 		Time.timeScale = 1;
+		time = Time.time;
 		paused = false;
 		score = 0;
-		time = 0;
 		GO.SetActive (false);
 	}
 }

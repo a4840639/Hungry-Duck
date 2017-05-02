@@ -30,7 +30,7 @@ public class GameController_Alt : MonoBehaviour {
 	void Update () {
 
 
-		if (Time.time - time > 1 && !paused) {
+		if (Time.time - time > 60 && !paused) {
 			GO.SetActive (true);
 			Text text = GameObject.Find ("TimeTxt").GetComponent<Text> ();
 			text.text = "Your Score: " + score;
