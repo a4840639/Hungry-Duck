@@ -25,6 +25,7 @@ public class Duck : MonoBehaviour {
 
 	bool onair = false;
 	shallow_wave wave_script;
+	GameController game;
 
 	// Use this for initialization
 	void Start () {
@@ -32,6 +33,7 @@ public class Duck : MonoBehaviour {
 		controller = GetComponent<CharacterController>();
         source = GetComponent<AudioSource>(); 
 		wave_script = GameObject.Find ("Water").GetComponent<shallow_wave>();
+		game = GameObject.Find ("GameController").GetComponent<GameController>();
 	}
      
 	// Update is called once per frame
@@ -94,6 +96,7 @@ public class Duck : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Food"))
 		{
 			other.gameObject.SetActive (false);
+			game.score += 100;
             source.PlayOneShot(eatsound, 1F);
         }
 	}
